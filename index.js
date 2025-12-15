@@ -1,28 +1,43 @@
 const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
-const userRoutes = require('./routes/userRoutes');
+const connectDB = require("./config/db");
+const userRoutes = require("./routes/userRoute");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const cors = require("cors");
-require('dotenv').config();
 
-
-const connectDB = require("./config/db");
-
+// 🔗 Connect Database
 connectDB();
 
-app.use(cors());
+// 🔐 Middlewares
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend-domain.vercel.app", // change later
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+
 app.use(express.json());
 
-// Routes
-app.use("/api/users", userRoutes);
-
+// 🏠 Root Route
 app.get("/", (req, res) => {
-  res.send("User Management Backend Running ");
+  res.send("User Management Backend Running 🚀");
 });
 
+// 🔀 API Routes
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+
+// ❌ 404 Handler
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+// 🚀 Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
