@@ -16,10 +16,12 @@ connectDB();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://your-frontend-domain.vercel.app", // change later
+    "https://polution-under-control-user-managemen.netlify.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
+
+app.options("*", cors());
 
 app.use(express.json());
 
